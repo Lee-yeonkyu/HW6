@@ -10,7 +10,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-/* �ʿ��� ������� �߰� */
+/* 필요한 헤더파일 추가 */
 
 typedef struct Node {
 	int key;
@@ -22,7 +22,7 @@ typedef struct Head {
 }headNode;
 
 
-/* �Լ� ����Ʈ */
+/* 함수 리스트 */
 headNode* initialize(headNode* h);
 int freeList(headNode* h);
 
@@ -43,7 +43,7 @@ int main()
 	int key;
 	headNode* headnode= NULL;
 
-	printf("[----- [�̿���] [2018038038] -----]\n");
+	printf("[----- [이연규] [2018038038] -----]\n");
 	do{
 		printf("----------------------------------------------------------------\n");
 		printf("                     Singly Linked List                         \n");
@@ -56,6 +56,7 @@ int main()
 		printf("----------------------------------------------------------------\n");
 
 		printf("Command = ");
+		fflush(stdout);
 		scanf(" %c", &command);
 
 		switch(command) {
@@ -67,16 +68,19 @@ int main()
 			break;
 		case 'i': case 'I':
 			printf("Your Key = ");
+			fflush(stdout);
 			scanf("%d", &key);
 			insertNode(headnode, key);
 			break;
 		case 'd': case 'D':
 			printf("Your Key = ");
+			fflush(stdout);
 			scanf("%d", &key);
 			deleteNode(headnode, key);
 			break;
 		case 'n': case 'N':
 			printf("Your Key = ");
+			fflush(stdout);
 			scanf("%d", &key);
 			insertLast(headnode, key);
 			break;
@@ -85,6 +89,7 @@ int main()
 			break;
 		case 'f': case 'F':
 			printf("Your Key = ");
+			fflush(stdout);
 			scanf("%d", &key);
 			insertFirst(headnode, key);
 			break;
@@ -109,19 +114,19 @@ int main()
 
 headNode* initialize(headNode* h) {
 
-	/* headNode�� NULL�� �ƴϸ�, freeNode�� ȣ���Ͽ� �Ҵ�� �޸� ��� ���� */
+	/* headNode가 NULL이 아니면, freeNode를 호출하여 할당된 메모리 모두 해제 */
 	if(h != NULL)
 		freeList(h);
 
-	/* headNode�� ���� �޸𸮸� �Ҵ��Ͽ� ���� */
+	/* headNode에 대한 메모리를 할당하여 리턴 */
 	headNode* temp = (headNode*)malloc(sizeof(headNode));
 	temp->first = NULL;
 	return temp;
 }
 
 int freeList(headNode* h){
-	/* h�� ����� listNode �޸� ����
-	 * headNode�� �����Ǿ�� ��.
+	/* h와 연결된 listNode 메모리 해제
+	 * headNode도 해제되어야 함.
 	 */
 	listNode* p = h->first;
 
@@ -138,37 +143,66 @@ int freeList(headNode* h){
 
 
 /**
- * list ó���� key�� ���� ����ϳ��� �߰�
+ * list 처음에 key에 대한 노드하나를 추가
  */
 int insertFirst(headNode* h, int key) {
 
-	listNode* node = (listNode*)malloc(sizeof(listNode));
-	node->key = key;
+	listNode* node = (listNode*)malloc(sizeof(listNode)); //새로운 노드를 생성해준다.
+	node->key = key; //입력받은 키값을 노드안에 넣어준다.
 
-	node->link = h->first;
-	h->first = node;
+	node->link = h->first; //first가 가르키고 있는곳을 node가 가르킨다.
+	h->first = node; // first가 노드를 가르키게 만든다.
 
 	return 0;
 }
 
 
-/* ����Ʈ�� �˻��Ͽ�, �Է¹��� key���� ū���� ������ ��� �ٷ� �տ� ���� */
+/* 리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입 */
 int insertNode(headNode* h, int key) {
 
-	return 0;
+	listNode *temp=(listNode *)malloc(sizeof(listNode));
+	listNode *New=(listNode *)malloc(sizeof(listNode));
+	listNode *Pre;
+	New->key=key;
+	New->link=NULL;
+	temp=h->first; //temp을 first가 가르키는 값으로 지정한다.
+
+	if(h->first ==NULL){ // 현재 리스트가 공백인 경우에.
+		h->first =New; //first가 New를 가르킬수 있게 만든다.
+		return New;
+	}
+	while(temp->key>key) //입력받은 키값보다 리스트안의 키값이 클때까지 반복한다.
+		temp=temp->link; //temp노드가 가르키는 곳을 temp로 바꾼다.
+	New->link=temp->link; //temp노드가 가르키는 곳을 new도 가르키게한다.
+	temp->link=New;//temp노드가 new를 가르키도록 지정한다.
+
+	return New;
 }
 
 /**
- * list�� key�� ���� ����ϳ��� �߰�
+ * list에 key에 대한 노드하나를 추가
  */
 int insertLast(headNode* h, int key) {
 
-	return 0;
+	listNode* last;
+		listNode* New =(listNode*)malloc(sizeof(listNode)); //새로운 노드를 할당해준다.
+		New->key=key; //노드안에 key값을 넣어준다.
+		New->link=NULL; //링크 필드는 아직 받지 않았기에 공백 할당.
+
+			if(h->first ==NULL){ // 현재 리스트가 공백인 경우에.
+				h->first =New; //first가 New를 가르킬수 있게 만든다.
+				return New;
+			}
+			last=h->first; //first가 가리키는 값을 last로 놓는다.
+			while(last->link !=NULL) //last의 링크가 가르키는 값이 없을때까지 반복해 마지막 노드를 찾는다.
+				last=last->link;//last노드가 가르키는 곳을 last로 바꾼다.
+			last->link=New; //last가 New를 가르키도록 지정한다.
+			return New;
 }
 
 
 /**
- * list�� ù��° ��� ����
+ * list의 첫번째 노드 삭제
  */
 int deleteFirst(headNode* h) {
 
@@ -178,7 +212,7 @@ int deleteFirst(headNode* h) {
 
 
 /**
- * list���� key�� ���� ��� ����
+ * list에서 key에 대한 노드 삭제
  */
 int deleteNode(headNode* h, int key) {
 
@@ -187,7 +221,7 @@ int deleteNode(headNode* h, int key) {
 }
 
 /**
- * list�� ������ ��� ����
+ * list의 마지막 노드 삭제
  */
 int deleteLast(headNode* h) {
 
@@ -196,7 +230,7 @@ int deleteLast(headNode* h) {
 
 
 /**
- * ����Ʈ�� ��ũ�� �������� �� ��ġ
+ * 리스트의 링크를 역순으로 재 배치
  */
 int invertList(headNode* h) {
 
@@ -210,15 +244,15 @@ void printList(headNode* h) {
 
 	printf("\n---PRINT\n");
 
-	if(h == NULL) {
+	if(h == NULL) { //리스트가 공백인 경우.
 		printf("Nothing to print....\n");
 		return;
 	}
 
 	p = h->first;
 
-	while(p != NULL) {
-		printf("[ [%d]=%d ] ", i, p->key);
+	while(p != NULL) {//리스트의 끝가지 반복.
+		printf("[ [%d]=%d ] ", i, p->key); // 리스트의 키값 출력.
 		p = p->link;
 		i++;
 	}
