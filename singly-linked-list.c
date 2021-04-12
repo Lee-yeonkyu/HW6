@@ -289,17 +289,17 @@ int invertList(headNode* h) {
 
 	listNode *p,*q,*r;
 
-	p=h->first;
-	q=NULL;
+	p=h->first; //역순으로 만들어줄 리스트.
+	q=NULL; // 역순으로 만들어줄 노드.
 	while(p!=NULL)
 	{
-		r=q;
+		r=q; //r은q를, q는 p를 차례로 따라간다.
 
 		q=p;
 		p=p->link;
-		q->link=r;
+		q->link=r; //q의 링크 방향을 바꿔준다.
 	}
-	h->first=q;
+	h->first=q; //first가 q를 가르키도록 바꿔준다.
 	return 0;
 }
 
