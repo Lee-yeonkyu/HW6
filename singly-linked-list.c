@@ -196,12 +196,13 @@ int insertNode(headNode* h, int key) {
  */
 int insertLast(headNode* h, int key) {
 
-	listNode* last;
+	listNode* last=(listNode*)malloc(sizeof(listNode));
 		listNode* New =(listNode*)malloc(sizeof(listNode)); //새로운 노드를 할당해준다.
+		New->key=key;
 		New->link=NULL; //링크 필드는 아직 받지 않았기에 공백 할당.
 
-			if(h !=NULL){ // 현재 리스트가 공백인 경우에.
-				New->link = h->first; //first가 가르키고 있는곳을 new가 가르킨다.
+
+			if(h->first == NULL){ // 현재 리스트가 공백인 경우에.
 					h->first = New; // first가 new를 가르키게 만든다.
 				return 1;
 			}
@@ -289,17 +290,17 @@ int invertList(headNode* h) {
 
 	listNode *p,*q,*r;
 
-	p=h->first; //역순으로 만들어줄 리스트.
-	q=NULL; // 역순으로 만들어줄 노드.
+	p=h->first;
+	q=NULL;
 	while(p!=NULL)
 	{
-		r=q; //r은q를, q는 p를 차례로 따라간다.
+		r=q;
 
 		q=p;
 		p=p->link;
-		q->link=r; //q의 링크 방향을 바꿔준다.
+		q->link=r;
 	}
-	h->first=q; //first가 q를 가르키도록 바꿔준다.
+	h->first=q;
 	return 0;
 }
 
